@@ -1,15 +1,19 @@
 package com.example.jakub.pharmapp;
 
 import android.app.Activity;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CompoundButton;
+import android.widget.ExpandableListView;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.Switch;
+
+import java.util.ArrayList;
 
 
 public class ShoppingCart extends Activity {
@@ -17,6 +21,8 @@ public class ShoppingCart extends Activity {
    private Button addButton;
    private LinearLayout ribbon;
    private Switch rswitch;
+   private ListView list;
+
 
 
     @Override
@@ -29,6 +35,28 @@ public class ShoppingCart extends Activity {
         addButton =(Button) findViewById(R.id.addButton) ;
         ribbon = (LinearLayout) findViewById(R.id.colorRibbon) ;
         rswitch = (Switch) findViewById(R.id.switch1) ;
+        list = (ListView) findViewById(R.id.expandableListView) ;
+
+
+        String[] values = new String[] { "Android", "iPhone", "WindowsMobile",
+                "Blackberry", "WebOS", "Ubuntu", "Windows7", "Max OS X",
+                "Linux", "OS/2", "Ubuntu", "Windows7", "Max OS X", "Linux",
+                "OS/2", "Ubuntu", "Windows7", "Max OS X", "Linux", "OS/2",
+                "Android", "iPhone", "WindowsMobile" };
+
+        final ArrayList<String> listo = new ArrayList<String>();
+        for (int i = 0; i < values.length; ++i) {
+            listo.add(values[i]);
+        }
+        final ArrayAdapter adapter = new ArrayAdapter(this,
+                android.R.layout.simple_list_item_1, listo);
+        list.setAdapter(adapter);
+
+
+        final Button btnAddMore = new Button(this);
+        btnAddMore.setText("Dodaj");
+
+        list.addFooterView(btnAddMore);
 
 
         addButton.setOnClickListener(new View.OnClickListener() {
