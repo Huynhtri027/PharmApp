@@ -32,7 +32,8 @@
             android:layout_height="wrap_content"
             android:padding="20dip"
             android:background="#a4ff2a18"
-            android:paddingLeft="25dip">
+            android:paddingLeft="25dip"
+            android:id="@+id/colorRibbon">
 
             <TextView
                 android:layout_width="wrap_content"

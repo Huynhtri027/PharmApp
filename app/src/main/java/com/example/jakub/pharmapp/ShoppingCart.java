@@ -1,21 +1,54 @@
 package com.example.jakub.pharmapp;
 
 import android.app.Activity;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.Button;
+import android.widget.CompoundButton;
+import android.widget.LinearLayout;
+import android.widget.Switch;
 
 
 public class ShoppingCart extends Activity {
 
-   //private Button addButton=  (Button) findViewById(R.id.addButton) ;
+   private Button addButton;
+   private LinearLayout ribbon;
+   private Switch rswitch;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_shopping_cart);
+
+
+
+        addButton =(Button) findViewById(R.id.addButton) ;
+        ribbon = (LinearLayout) findViewById(R.id.colorRibbon) ;
+        rswitch = (Switch) findViewById(R.id.switch1) ;
+
+
+        addButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ribbon.setBackgroundColor(0xA404FF60);
+            }
+        });
+
+        rswitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if(isChecked){
+                    ribbon.setBackgroundColor(0xA404FF60);
+                }else{
+                    ribbon.setBackgroundColor(0xa4ff2a18);
+                }
+            }
+        });
+
     }
 
 
