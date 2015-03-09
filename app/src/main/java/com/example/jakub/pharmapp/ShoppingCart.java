@@ -13,6 +13,9 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.Switch;
 
+import com.example.jakub.pharmapp.drugsItems.drugInCart;
+import com.example.jakub.pharmapp.drugsItems.drugInCartAdapter;
+
 import java.util.ArrayList;
 
 
@@ -37,7 +40,7 @@ public class ShoppingCart extends Activity {
         rswitch = (Switch) findViewById(R.id.switch1) ;
         list = (ListView) findViewById(R.id.expandableListView) ;
 
-
+/*
         String[] values = new String[] { "Android", "iPhone", "WindowsMobile",
                 "Blackberry", "WebOS", "Ubuntu", "Windows7", "Max OS X",
                 "Linux", "OS/2", "Ubuntu", "Windows7", "Max OS X", "Linux",
@@ -50,7 +53,13 @@ public class ShoppingCart extends Activity {
         }
         final ArrayAdapter adapter = new ArrayAdapter(this,
                 android.R.layout.simple_list_item_1, listo);
-        list.setAdapter(adapter);
+        list.setAdapter(adapter);*/
+
+        final ArrayList<drugInCart> listofd = new ArrayList<drugInCart>();
+        listofd.add(new drugInCart("lek1",1,25.0f,25.0f,25.0f));
+
+        drugInCartAdapter adapterd = new drugInCartAdapter(this,listofd);
+        list.setAdapter(adapterd);
 
 
         final Button btnAddMore = new Button(this);

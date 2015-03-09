@@ -1,14 +1,15 @@
+package com.example.jakub.pharmapp.drugsItems;
 /**
  * Created by xnivel on 09/03/2015.
  */
 public class drugInCart {
     public String name;
-    public String count;
-    public String price;
-    public String priceWithReduction;
-    public String priceMBCount;
+    public int count;
+    public float price;
+    public float priceWithReduction;
+    public float priceMBCount;
 
-    public drugInCart(String name, String count, String price, String priceWithReduction, String priceMBCount) {
+    public drugInCart(String name, int count, float price, float priceWithReduction, float priceMBCount) {
         this.name = name;
         this.count = count;
         this.price = price;
@@ -24,35 +25,35 @@ public class drugInCart {
         this.name = name;
     }
 
-    public String getCount() {
+    public int getCount() {
         return count;
     }
 
-    public void setCount(String count) {
+    public void setCount(int count) {
         this.count = count;
     }
 
-    public String getPrice() {
+    public float getPrice() {
         return price;
     }
 
-    public void setPrice(String price) {
+    public void setPrice(float price) {
         this.price = price;
     }
 
-    public String getPriceWithReduction() {
+    public float getPriceWithReduction() {
         return priceWithReduction;
     }
 
-    public void setPriceWithReduction(String priceWithReduction) {
+    public void setPriceWithReduction(float priceWithReduction) {
         this.priceWithReduction = priceWithReduction;
     }
 
-    public String getPriceMBCount() {
+    public float getPriceMBCount() {
         return priceMBCount;
     }
 
-    public void setPriceMBCount(String priceMBCount) {
+    public void setPriceMBCount(float priceMBCount) {
         this.priceMBCount = priceMBCount;
     }
 }
