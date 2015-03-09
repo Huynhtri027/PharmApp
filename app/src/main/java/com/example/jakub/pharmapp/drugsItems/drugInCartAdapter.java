@@ -10,6 +10,7 @@ import android.widget.TextView;
 import com.example.jakub.pharmapp.R;
 import com.example.jakub.pharmapp.drugsItems.drugInCart;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 
 /**
@@ -34,7 +35,7 @@ public class drugInCartAdapter extends ArrayAdapter<drugInCart> {
         // Populate the data into the template view using the data object
         dname.setText(drug.name);
         dcount.setText(Integer.toString(drug.count));
-        dprice.setText(Float.toString(drug.priceMBCount));
+        dprice.setText(new DecimalFormat("0.00").format(drug.priceMBCount)+"zł");
         // Return the completed view to render on screen
         return convertView;
     }

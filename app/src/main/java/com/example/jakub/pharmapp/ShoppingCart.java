@@ -40,21 +40,6 @@ public class ShoppingCart extends Activity {
         rswitch = (Switch) findViewById(R.id.switch1) ;
         list = (ListView) findViewById(R.id.expandableListView) ;
 
-/*
-        String[] values = new String[] { "Android", "iPhone", "WindowsMobile",
-                "Blackberry", "WebOS", "Ubuntu", "Windows7", "Max OS X",
-                "Linux", "OS/2", "Ubuntu", "Windows7", "Max OS X", "Linux",
-                "OS/2", "Ubuntu", "Windows7", "Max OS X", "Linux", "OS/2",
-                "Android", "iPhone", "WindowsMobile" };
-
-        final ArrayList<String> listo = new ArrayList<String>();
-        for (int i = 0; i < values.length; ++i) {
-            listo.add(values[i]);
-        }
-        final ArrayAdapter adapter = new ArrayAdapter(this,
-                android.R.layout.simple_list_item_1, listo);
-        list.setAdapter(adapter);*/
-
         final ArrayList<drugInCart> listofd = new ArrayList<drugInCart>();
         listofd.add(new drugInCart("lek1",1,25.0f,25.0f,25.0f));
 
