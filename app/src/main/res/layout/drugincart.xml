@@ -25,7 +25,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text="ilość:"
+            android:text="ilość: "
             android:id="@+id/textView5" />
 
         <TextView
@@ -44,7 +44,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text="Cena:"
+            android:text="Cena: "
             android:id="@+id/textView7" />
 
         <TextView

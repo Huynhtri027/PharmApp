@@ -1,6 +1,9 @@
 package com.example.jakub.pharmapp;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.Dialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -11,7 +14,9 @@ import android.widget.CompoundButton;
 import android.widget.ExpandableListView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.NumberPicker;
 import android.widget.Switch;
+import android.widget.TextView;
 
 import com.example.jakub.pharmapp.drugsItems.drugInCart;
 import com.example.jakub.pharmapp.drugsItems.drugInCartAdapter;
@@ -41,7 +46,7 @@ public class ShoppingCart extends Activity {
         list = (ListView) findViewById(R.id.expandableListView) ;
 
         final ArrayList<drugInCart> listofd = new ArrayList<drugInCart>();
-        listofd.add(new drugInCart("lek1",1,25.0f,25.0f,25.0f));
+        listofd.add(new drugInCart("Lek1",1,25.0f,25.0f,25.0f));
 
         drugInCartAdapter adapterd = new drugInCartAdapter(this,listofd);
         list.setAdapter(adapterd);
@@ -53,12 +58,7 @@ public class ShoppingCart extends Activity {
         list.addFooterView(btnAddMore);
 
 
-        addButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                ribbon.setBackgroundColor(0xA404FF60);
-            }
-        });
+
 
         rswitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
@@ -70,6 +70,54 @@ public class ShoppingCart extends Activity {
                 }
             }
         });
+
+
+
+        final AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        final Dialog dialog = new Dialog(this);
+
+        addButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                /*
+                DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        switch (which){
+                            case DialogInterface.BUTTON_POSITIVE:
+                                //Yes button clicked
+                                break;
+
+                            case DialogInterface.BUTTON_NEGATIVE:
+                                //No button clicked
+                                break;
+                        }
+                    }
+                };
+
+
+                builder.setMessage("Are you sure?").setPositiveButton("Yes", dialogClickListener)
+                        .setNegativeButton("No", dialogClickListener).show();*/
+
+
+
+                //testy
+
+                dialog.setContentView(R.layout.dialogdrugcart);
+                dialog.setTitle("Title...");
+                NumberPicker np = (NumberPicker) dialog.findViewById(R.id.numberPicker);
+
+
+                // set the custom dialog components - text, image and button
+                np.setMaxValue(120);
+                np.setMinValue(0);
+                np.setValue(30);
+
+                dialog.show();
+
+            }
+        });
+
 
     }
 
