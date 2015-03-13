@@ -5,16 +5,26 @@ package com.example.jakub.pharmapp.drugsItems;
 public class drugInCart {
     public String name;
     public int count;
+    public float actualprice;
     public float price;
     public float priceWithReduction;
     public float priceMBCount;
 
-    public drugInCart(String name, int count, float price, float priceWithReduction, float priceMBCount) {
+    public drugInCart(String name, int count, float actualprice, float price, float priceWithReduction, float priceMBCount) {
         this.name = name;
         this.count = count;
+        this.actualprice = actualprice;
         this.price = price;
         this.priceWithReduction = priceWithReduction;
         this.priceMBCount = priceMBCount;
+    }
+
+    public float getActualprice() {
+        return actualprice;
+    }
+
+    public void setActualprice(float actualprice) {
+        this.actualprice = actualprice;
     }
 
     public String getName() {
