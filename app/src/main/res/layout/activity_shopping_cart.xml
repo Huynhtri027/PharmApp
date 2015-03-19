@@ -93,9 +93,28 @@
                 android:textAppearance="?android:attr/textAppearanceMedium"
                 android:text="0,00"
                 android:id="@+id/finalprice" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="zł"
+                android:id="@+id/textView3"
+                android:textSize="20dp"
+                android:singleLine="false" />
         </LinearLayout>
 
 
     </LinearLayout>
+
+    <ImageButton
+        android:layout_width="35dip"
+        android:layout_height="35dip"
+        android:id="@+id/imageButton"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentEnd="false"
+        android:layout_marginLeft="5dip"
+        android:layout_marginRight="5dip"
+        android:layout_marginBottom="5dip" />
 
 </RelativeLayout>

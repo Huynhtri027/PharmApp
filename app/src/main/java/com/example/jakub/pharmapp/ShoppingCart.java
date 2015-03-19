@@ -4,6 +4,8 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -13,6 +15,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.ExpandableListView;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.NumberPicker;
@@ -22,6 +25,7 @@ import android.widget.TextView;
 import com.example.jakub.pharmapp.drugsItems.drugInCart;
 import com.example.jakub.pharmapp.drugsItems.drugInCartAdapter;
 
+import java.io.IOException;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 
@@ -32,13 +36,15 @@ public class ShoppingCart extends Activity {
    private LinearLayout ribbon;
    private Switch rswitch;
    private ListView list;
+   private ImageButton removeallb;
+   private TextView finalprice;
 
    public final ArrayList<drugInCart> listofd = new ArrayList<drugInCart>();
 
     private void refresharraylist(){
         drugInCartAdapter adapterd = new drugInCartAdapter(this,listofd);
         list.setAdapter(adapterd);
-        TextView finalprice = (TextView) findViewById(R.id.finalprice);
+
         float tmp=0.0f;
         for(drugInCart d : listofd)
         {
@@ -75,8 +81,21 @@ public class ShoppingCart extends Activity {
         ribbon = (LinearLayout) findViewById(R.id.colorRibbon) ;
         rswitch = (Switch) findViewById(R.id.switch1) ;
         list = (ListView) findViewById(R.id.expandableListView) ;
+        finalprice = (TextView) findViewById(R.id.finalprice);
 
         listofd.add(new drugInCart("Lek1",1,25.0f,25.0f,10.0f,25.0f));
+
+
+        try {
+            Drawable drawnableicon = Drawable.createFromStream(getAssets().open("kosz.png"), null);
+            removeallb = (ImageButton) findViewById(R.id.imageButton) ;
+            removeallb.setBackground(drawnableicon);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+
+
 
         refresharraylist();
 
@@ -171,10 +190,38 @@ public class ShoppingCart extends Activity {
 
         final AlertDialog.Builder builder = new AlertDialog.Builder(this);
 
+        removeallb.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        switch (which){
+                            case DialogInterface.BUTTON_POSITIVE:
+                                //Yes button clicked
+                                listofd.clear();
+                                refresharraylist();
+                                break;
+
+                            case DialogInterface.BUTTON_NEGATIVE:
+                                //No button clicked
+                                break;
+                        }
+                    }
+                };
+
+
+                builder.setMessage("Czy chcesz usunąć wszystkie pola?").setPositiveButton("Tak", dialogClickListener)
+                        .setNegativeButton("Nie", dialogClickListener).show();
+
+            }
+        });
 
         addButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+                final View vi=v;
 
                 DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
                     @Override
@@ -182,6 +229,13 @@ public class ShoppingCart extends Activity {
                         switch (which){
                             case DialogInterface.BUTTON_POSITIVE:
                                 //Yes button clicked
+                                Intent intent = new Intent(vi.getContext(), ShoppingResult.class);
+                                ShoppingResult.finalprice=finalprice.getText().toString();
+                                ShoppingResult.recept=rswitch.isChecked();
+                                ShoppingResult.listofd=listofd;
+
+                                startActivity(intent);
+
                                 break;
 
                             case DialogInterface.BUTTON_NEGATIVE:
@@ -204,6 +258,8 @@ public class ShoppingCart extends Activity {
         });
 
 
+
+
     }
 
 
@@ -222,9 +278,9 @@ public class ShoppingCart extends Activity {
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
+        /*if (id == R.id.action_settings) {
             return true;
-        }
+        }*/
 
         return super.onOptionsItemSelected(item);
     }

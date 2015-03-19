@@ -94,7 +94,7 @@
                     android:singleLine="false" />
             </LinearLayout>
             <Space
-                android:layout_width="20px"
+                android:layout_width="220dip"
                 android:layout_height="fill_parent"
                 android:layout_weight="12" />
         </LinearLayout>
