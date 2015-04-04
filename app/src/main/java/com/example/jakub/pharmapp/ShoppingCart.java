@@ -11,10 +11,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CompoundButton;
-import android.widget.ExpandableListView;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -32,14 +30,14 @@ import java.util.ArrayList;
 
 public class ShoppingCart extends Activity {
 
-   private Button addButton;
+   private Button endButton;
    private LinearLayout ribbon;
    private Switch rswitch;
    private ListView list;
    private ImageButton removeallb;
    private TextView finalprice;
 
-   public final ArrayList<drugInCart> listofd = new ArrayList<drugInCart>();
+   public static ArrayList<drugInCart> listofd = new ArrayList<drugInCart>();
 
     private void refresharraylist(){
         drugInCartAdapter adapterd = new drugInCartAdapter(this,listofd);
@@ -77,7 +75,7 @@ public class ShoppingCart extends Activity {
 
 
 
-        addButton =(Button) findViewById(R.id.addButton) ;
+        endButton =(Button) findViewById(R.id.endButton) ;
         ribbon = (LinearLayout) findViewById(R.id.colorRibbon) ;
         rswitch = (Switch) findViewById(R.id.switch1) ;
         list = (ListView) findViewById(R.id.expandableListView) ;
@@ -103,6 +101,15 @@ public class ShoppingCart extends Activity {
         btnAddMore.setText("Dodaj");
 
         list.addFooterView(btnAddMore);
+
+        btnAddMore.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(v.getContext(), look4drug.class);
+
+                startActivity(intent);
+            }
+        });
 
         final Dialog dialog = new Dialog(this);
         list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -217,22 +224,22 @@ public class ShoppingCart extends Activity {
             }
         });
 
-        addButton.setOnClickListener(new View.OnClickListener() {
+        endButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-                final View vi=v;
+                final View vi = v;
 
                 DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        switch (which){
+                        switch (which) {
                             case DialogInterface.BUTTON_POSITIVE:
                                 //Yes button clicked
                                 Intent intent = new Intent(vi.getContext(), ShoppingResult.class);
-                                ShoppingResult.finalprice=finalprice.getText().toString();
-                                ShoppingResult.recept=rswitch.isChecked();
-                                ShoppingResult.listofd=listofd;
+                                ShoppingResult.finalprice = finalprice.getText().toString();
+                                ShoppingResult.recept = rswitch.isChecked();
+                                ShoppingResult.listofd = listofd;
 
                                 startActivity(intent);
 
@@ -248,7 +255,6 @@ public class ShoppingCart extends Activity {
 
                 builder.setMessage("Are you sure?").setPositiveButton("Yes", dialogClickListener)
                         .setNegativeButton("No", dialogClickListener).show();
-
 
 
                 //testy

@@ -18,12 +18,17 @@
         </activity>
         <activity
             android:name=".ShoppingResult"
-            android:label="@string/title_activity_shopping_result">
-            <!--android:parentActivityName=".ShoppingCart">-->
+            android:label="@string/title_activity_shopping_result" >
+
+            <!-- android:parentActivityName=".ShoppingCart"> -->
 
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.example.jakub.pharmapp.ShoppingCart" />
+        </activity>
+        <activity
+            android:name=".look4drug"
+            android:label="@string/title_activity_look4drug" >
         </activity>
     </application>
 

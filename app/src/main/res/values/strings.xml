@@ -3,5 +3,6 @@
 
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
-    <string name="title_activity_shopping_result">ShoppingResult</string>
+    <string name="title_activity_shopping_result">Dokonany zakup</string>
+    <string name="title_activity_look4drug">Szukanie leku</string>
 </resources>
