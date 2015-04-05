@@ -57,7 +57,7 @@ public class ShoppingResult extends Activity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(v.getContext(), ShoppingCart.class);
-
+                ShoppingCart.listofd.clear();
                 startActivity(intent);
             }
         });

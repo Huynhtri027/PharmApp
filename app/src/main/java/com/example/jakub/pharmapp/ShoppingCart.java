@@ -46,7 +46,7 @@ public class ShoppingCart extends Activity {
         float tmp=0.0f;
         for(drugInCart d : listofd)
         {
-            tmp=d.getPriceMBCount();
+            tmp+=d.getPriceMBCount();
         }
         finalprice.setText(new DecimalFormat("0.00").format(tmp));
     }
@@ -81,7 +81,7 @@ public class ShoppingCart extends Activity {
         list = (ListView) findViewById(R.id.expandableListView) ;
         finalprice = (TextView) findViewById(R.id.finalprice);
 
-        listofd.add(new drugInCart("Lek1",1,25.0f,25.0f,10.0f,25.0f));
+//        listofd.add(new drugInCart("Lek1",1,25.0f,25.0f,10.0f,25.0f));
 
 
         try {
@@ -284,9 +284,11 @@ public class ShoppingCart extends Activity {
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        /*if (id == R.id.action_settings) {
+        if (id == R.id.action_settings) {
+            Intent intent = new Intent(this, Statistics.class);
+            startActivity(intent);
             return true;
-        }*/
+        }
 
         return super.onOptionsItemSelected(item);
     }

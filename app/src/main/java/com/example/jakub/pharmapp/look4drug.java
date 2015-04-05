@@ -39,7 +39,7 @@ public class look4drug extends Activity {
         setContentView(R.layout.activity_look4drug);
         list = (ListView) findViewById(R.id.searchresultlist) ;
 
-        listofd.add(new drugInCart("Lek1",1,25.0f,25.0f,10.0f,25.0f));
+        listofd.add(new drugInCart("Lek2",1,25.0f,25.0f,10.0f,25.0f));
 
         refresharraylist();
 
@@ -53,9 +53,9 @@ public class look4drug extends Activity {
 //
 //                Toast toast = Toast.makeText(context, text, duration);
 //                toast.show();
+                ShoppingCart.listofd.add(listofd.get(position));
 
                 Intent intent = new Intent(view.getContext(), ShoppingCart.class);
-                ShoppingCart.listofd = listofd;
 
                 startActivity(intent);
                 return false;

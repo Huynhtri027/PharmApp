@@ -30,6 +30,10 @@
             android:name=".look4drug"
             android:label="@string/title_activity_look4drug" >
         </activity>
+        <activity
+            android:name=".Statistics"
+            android:label="@string/title_activity_statistics" >
+        </activity>
     </application>
 
 </manifest>
