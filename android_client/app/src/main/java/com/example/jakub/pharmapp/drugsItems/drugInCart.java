@@ -1,4 +1,8 @@
 package com.example.jakub.pharmapp.drugsItems;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
 /**
  * Created by xnivel on 09/03/2015.
  */
@@ -9,6 +13,35 @@ public class drugInCart {
     public float price;
     public float priceWithReduction;
     public float priceMBCount;
+
+    public drugInCart(JSONObject jobj) {
+        try {
+            this.name = jobj.getString("name");
+            this.count = jobj.getInt("count");
+            this.price =  (float)jobj.getDouble("price");
+            if(jobj.has("priceWR")){
+                this.priceWithReduction = (float)jobj.getDouble("priceWR");
+            }else{
+                this.priceWithReduction = this.price;
+            }
+
+
+            this.actualprice = this.price;
+            this.priceMBCount = this.price;
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    public drugInCart(String name, int count, float price, float priceWithReduction) {
+        this.name = name;
+        this.count = count;
+        this.price = price;
+        this.priceWithReduction = priceWithReduction;
+        this.priceMBCount = this.price*this.count;
+        this.actualprice = this.price;
+    }
 
     public drugInCart(String name, int count, float actualprice, float price, float priceWithReduction, float priceMBCount) {
         this.name = name;
