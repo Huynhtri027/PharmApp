@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.jakub.pharmapp" >
+
     <uses-permission android:name="android.permission.INTERNET" />
 
     <application
@@ -34,6 +35,10 @@
         <activity
             android:name=".Statistics"
             android:label="@string/title_activity_statistics" >
+        </activity>
+        <activity
+            android:name=".Dialognotenought"
+            android:label="@string/title_activity_dialognotenought" >
         </activity>
     </application>
 

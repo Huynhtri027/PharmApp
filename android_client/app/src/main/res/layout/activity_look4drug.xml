@@ -10,7 +10,9 @@
         android:layout_width="fill_parent"
         android:layout_weight="1"
         android:layout_height="wrap_content"
-        android:layout_margin="10dp">
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginRight="10dp">
 
         <EditText
             android:layout_width="match_parent"
@@ -29,11 +31,35 @@
 
     </LinearLayout>
 
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_weight="2"
+        android:layout_marginBottom="5dp">
+
+        <TextView
+            android:text="Na recepte"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/textView8"
+            android:textSize="15dip"
+            android:layout_marginRight="5dip" />
+
+        <TextView
+            android:text="tak"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/ifdiscount"
+            android:textSize="20dip" />
+    </LinearLayout>
+
     <ListView
         android:layout_width="match_parent"
         android:layout_height="fill_parent"
         android:id="@+id/searchresultlist"
-        android:layout_weight="10" />
+        android:layout_weight="59" />
 
     <LinearLayout
         android:orientation="horizontal"

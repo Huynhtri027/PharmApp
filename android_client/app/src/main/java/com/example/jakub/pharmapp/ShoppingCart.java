@@ -3,10 +3,12 @@ package com.example.jakub.pharmapp;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -19,11 +21,23 @@ import android.widget.ListView;
 import android.widget.NumberPicker;
 import android.widget.Switch;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.jakub.pharmapp.drugsItems.drugInCart;
 import com.example.jakub.pharmapp.drugsItems.drugInCartAdapter;
 
+import org.apache.http.HttpResponse;
+import org.apache.http.client.ResponseHandler;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.StringEntity;
+import org.apache.http.impl.client.BasicResponseHandler;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.json.JSONArray;
+import org.json.JSONException;
+
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 
@@ -36,10 +50,13 @@ public class ShoppingCart extends Activity {
    private ListView list;
    private ImageButton removeallb;
    private TextView finalprice;
+   private String posturl="http://192.168.1.34:8888/test";
 
    public static ArrayList<drugInCart> listofd = new ArrayList<drugInCart>();
+   public static boolean discount = false;
 
     private void refresharraylist(){
+
         drugInCartAdapter adapterd = new drugInCartAdapter(this,listofd);
         list.setAdapter(adapterd);
 
@@ -49,6 +66,7 @@ public class ShoppingCart extends Activity {
             tmp+=d.getPriceMBCount();
         }
         finalprice.setText(new DecimalFormat("0.00").format(tmp));
+
     }
 
     private void makereduction(){
@@ -63,6 +81,107 @@ public class ShoppingCart extends Activity {
         {
             d.setActualprice(d.getPrice());
             d.setPriceMBCount(d.getActualprice()*d.getCount());
+        }
+    }
+
+    private StringEntity JsonSE(){
+        JSONArray ja = new JSONArray();
+        for(drugInCart dic:listofd){
+            ja.put(dic.toJson());
+        }
+        StringEntity se = null;
+        try {
+            se = new StringEntity(ja.toString());
+            Log.w("se", ja.toString());
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+        return se;
+    }
+
+    private String response2String(HttpResponse responseHandler){
+
+        String responseString=null;
+        try {
+            ByteArrayOutputStream out = new ByteArrayOutputStream();
+            responseHandler.getEntity().writeTo(out);
+            responseString = out.toString();
+            out.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return responseString;
+    }
+
+    private String getResultString(){
+        StringEntity se = JsonSE();
+
+        DefaultHttpClient httpclient = new DefaultHttpClient();
+        HttpPost httpost = new HttpPost(posturl);
+        httpost.setEntity(se);
+        httpost.setHeader("Accept", "application/json");
+        httpost.setHeader("Content-type", "application/json");
+        HttpResponse responseHandler =null;
+        try {
+            responseHandler=httpclient.execute(httpost);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        Context context = getApplicationContext();
+        CharSequence text = "Hello toast! "+responseHandler.getStatusLine().getStatusCode();;
+        int duration = Toast.LENGTH_SHORT;
+
+        Toast toast = Toast.makeText(context, text, duration);
+        toast.show();
+
+        return response2String(responseHandler);
+
+
+    }
+
+    private void showPositivResult(){
+        Intent intent = new Intent(getApplicationContext(), ShoppingResult.class);
+        ShoppingResult.finalprice = finalprice.getText().toString();
+        ShoppingResult.recept = rswitch.isChecked();
+        ShoppingResult.listofd = listofd;
+
+        startActivity(intent);
+    }
+    private void showNegativResult(String res) throws JSONException {
+
+        ArrayList<drugInCart> neglistres = new ArrayList<drugInCart>();
+
+        JSONArray arr = null;
+        arr = new JSONArray(res);
+        for(int i = 0; i < arr.length(); i++){
+            neglistres.add(new drugInCart(arr.getJSONObject(i)));
+        }
+
+        WrongShoppingResult.listofd = neglistres;
+        Dialog test=new WrongShoppingResult(this);
+        test.show();
+    }
+
+    private void closeShoppingCart(){
+
+
+        if(listofd.size()>0){
+
+            String responseString="";
+            responseString=getResultString();
+
+            try {
+                if(!(responseString.length()>2)){
+                    //positv
+                    showPositivResult();
+                }else{
+                    //negativ
+                    showNegativResult(responseString);
+
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
         }
     }
 
@@ -81,7 +200,12 @@ public class ShoppingCart extends Activity {
         list = (ListView) findViewById(R.id.expandableListView) ;
         finalprice = (TextView) findViewById(R.id.finalprice);
 
-//        listofd.add(new drugInCart("Lek1",1,25.0f,25.0f,10.0f,25.0f));
+        if(listofd.size()>0){
+            endButton.setEnabled(true);
+        }else{
+            endButton.setEnabled(false);
+        }
+
 
 
         try {
@@ -127,9 +251,10 @@ public class ShoppingCart extends Activity {
                 // set the custom dialog components - text, image and button
                 priceperd.setText(new DecimalFormat("0.00").format(selecteddrug.getActualprice()));
                 pricedm.setText(new DecimalFormat("0.00").format(selecteddrug.getCount()*selecteddrug.getActualprice()));
-                np.setValue(selecteddrug.getCount());
+
                 np.setMaxValue(99);
                 np.setMinValue(1);
+                np.setValue(selecteddrug.getCount());
                 np.setOnValueChangedListener(new NumberPicker.OnValueChangeListener() {
                     @Override
                     public void onValueChange(NumberPicker picker, int oldVal, int newVal) {
@@ -177,15 +302,26 @@ public class ShoppingCart extends Activity {
 
 
 
-
+        rswitch.setChecked(discount);
+        if(discount){
+            ribbon.setBackgroundColor(0xA404FF60);
+            makereduction();
+            refresharraylist();
+        }else{
+            ribbon.setBackgroundColor(0xa4ff2a18);
+            unmakereduction();
+            refresharraylist();
+        }
         rswitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if(isChecked){
+                    discount=true;
                     ribbon.setBackgroundColor(0xA404FF60);
                     makereduction();
                     refresharraylist();
                 }else{
+                    discount=false;
                     ribbon.setBackgroundColor(0xa4ff2a18);
                     unmakereduction();
                     refresharraylist();
@@ -208,10 +344,12 @@ public class ShoppingCart extends Activity {
                                 //Yes button clicked
                                 listofd.clear();
                                 refresharraylist();
+                                endButton.setEnabled(false);
                                 break;
 
                             case DialogInterface.BUTTON_NEGATIVE:
                                 //No button clicked
+
                                 break;
                         }
                     }
@@ -236,17 +374,20 @@ public class ShoppingCart extends Activity {
                         switch (which) {
                             case DialogInterface.BUTTON_POSITIVE:
                                 //Yes button clicked
-                                Intent intent = new Intent(vi.getContext(), ShoppingResult.class);
+                                /*Intent intent = new Intent(vi.getContext(), ShoppingResult.class);
                                 ShoppingResult.finalprice = finalprice.getText().toString();
                                 ShoppingResult.recept = rswitch.isChecked();
                                 ShoppingResult.listofd = listofd;
 
-                                startActivity(intent);
+                                startActivity(intent);*/
+
+                                closeShoppingCart();
 
                                 break;
 
                             case DialogInterface.BUTTON_NEGATIVE:
                                 //No button clicked
+
                                 break;
                         }
                     }
@@ -262,9 +403,6 @@ public class ShoppingCart extends Activity {
 
             }
         });
-
-
-
 
     }
 
