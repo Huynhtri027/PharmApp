@@ -50,7 +50,7 @@ public class ShoppingCart extends Activity {
    private ListView list;
    private ImageButton removeallb;
    private TextView finalprice;
-   private String posturl="http://192.168.1.34:8888/test";
+   private String posturl="http://192.168.1.34:8888/buyDrug";
 
    public static ArrayList<drugInCart> listofd = new ArrayList<drugInCart>();
    public static boolean discount = false;
@@ -127,12 +127,6 @@ public class ShoppingCart extends Activity {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        Context context = getApplicationContext();
-        CharSequence text = "Hello toast! "+responseHandler.getStatusLine().getStatusCode();;
-        int duration = Toast.LENGTH_SHORT;
-
-        Toast toast = Toast.makeText(context, text, duration);
-        toast.show();
 
         return response2String(responseHandler);
 
@@ -374,12 +368,6 @@ public class ShoppingCart extends Activity {
                         switch (which) {
                             case DialogInterface.BUTTON_POSITIVE:
                                 //Yes button clicked
-                                /*Intent intent = new Intent(vi.getContext(), ShoppingResult.class);
-                                ShoppingResult.finalprice = finalprice.getText().toString();
-                                ShoppingResult.recept = rswitch.isChecked();
-                                ShoppingResult.listofd = listofd;
-
-                                startActivity(intent);*/
 
                                 closeShoppingCart();
 
@@ -394,8 +382,8 @@ public class ShoppingCart extends Activity {
                 };
 
 
-                builder.setMessage("Are you sure?").setPositiveButton("Yes", dialogClickListener)
-                        .setNegativeButton("No", dialogClickListener).show();
+                builder.setMessage("Czy na pewno zamknąć koszyk?").setPositiveButton("Tak", dialogClickListener)
+                        .setNegativeButton("Nie", dialogClickListener).show();
 
 
                 //testy
