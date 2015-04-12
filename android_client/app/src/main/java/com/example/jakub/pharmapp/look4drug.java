@@ -42,12 +42,35 @@ public class look4drug extends Activity {
     private EditText searchedittext;
     private Button cancelbut;
     private Button lookforbut;
+    private TextView resultrecipe;
     private String url = "http://192.168.1.34:8888/search/";
 
     public ArrayList<drugInCart> listofd = new ArrayList<drugInCart>();
 
+    private void makereduction(){
+        for(drugInCart d : listofd)
+        {
+            d.setActualprice(d.getPriceWithReduction());
+            d.setPriceMBCount(d.getActualprice());
+        }
+    }
+    private void unmakereduction(){
+        for(drugInCart d : listofd)
+        {
+            d.setActualprice(d.getPrice());
+            d.setPriceMBCount(d.getActualprice());
+        }
+    }
 
     private void refresharraylist(){
+        listofd.removeAll(ShoppingCart.listofd);
+
+        if(ShoppingCart.discount){
+            makereduction();
+        }else{
+            unmakereduction();
+        }
+
         drugInCartAdapter adapterd = new drugInCartAdapter(this,listofd);
         if(list!=null)
         list.setAdapter(adapterd);
@@ -124,6 +147,8 @@ public class look4drug extends Activity {
         searchedittext = (EditText) findViewById(R.id.searchtext);
         lookforbut = (Button) findViewById(R.id.lookforbut);
         cancelbut = (Button) findViewById(R.id.button5);
+        resultrecipe = (TextView) findViewById(R.id.ifdiscount) ;
+
         cancelbut.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -132,6 +157,11 @@ public class look4drug extends Activity {
             }
         });
 
+        if(ShoppingCart.discount){
+            resultrecipe.setText("Tak");
+        }else{
+            resultrecipe.setText("Nie");
+        }
 
         searchfunc("");
 

@@ -6,13 +6,44 @@ import org.json.JSONObject;
 /**
  * Created by xnivel on 09/03/2015.
  */
-public class drugInCart {
+public class drugInCart implements Comparable {
     public String name;
     public int count;
     public float actualprice;
     public float price;
     public float priceWithReduction;
     public float priceMBCount;
+
+    @Override
+    public int hashCode() {
+     return name.hashCode();
+    }
+
+
+    @Override
+    public boolean equals(Object other){
+        if (other == null) return false;
+        if (other == this) return true;
+        if (!(other instanceof drugInCart))return false;
+        drugInCart otherMyClass = (drugInCart)other;
+        if(otherMyClass.name.hashCode()==this.name.hashCode()) return true;
+        return false;
+    }
+
+
+    public JSONObject toJson(){
+        JSONObject json = new JSONObject();
+
+        try {
+            json.put("name",this.name);
+            json.put("count",this.count);
+            json.put("price",this.priceMBCount/this.count);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        return json;
+    }
 
     public drugInCart(JSONObject jobj) {
         try {
@@ -34,11 +65,11 @@ public class drugInCart {
 
     }
 
-    public drugInCart(String name, int count, float price, float priceWithReduction) {
-        this.name = name;
-        this.count = count;
-        this.price = price;
-        this.priceWithReduction = priceWithReduction;
+    public drugInCart(String asd, int i, float v) {
+        this.name = asd;
+        this.count = i;
+        this.price = v;
+        this.priceWithReduction = v;
         this.priceMBCount = this.price*this.count;
         this.actualprice = this.price;
     }
@@ -98,5 +129,13 @@ public class drugInCart {
 
     public void setPriceMBCount(float priceMBCount) {
         this.priceMBCount = priceMBCount;
+    }
+
+    @Override
+    public int compareTo(Object another) {
+        drugInCart otherMyClass = (drugInCart)another;
+
+
+        return name.compareTo(otherMyClass.name);
     }
 }

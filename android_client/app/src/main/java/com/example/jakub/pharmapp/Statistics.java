@@ -67,7 +67,14 @@ public class Statistics extends Activity {
 
         HttpClient httpclient = new DefaultHttpClient();
         try {
-            HttpResponse response = httpclient.execute(new HttpGet(url+(currentdate.get(Calendar.MONTH)+1)+"-"+currentdate.get(Calendar.YEAR)));
+            String newurl;
+            if((currentdate.get(Calendar.MONTH)+1)<10)
+                newurl=url+'0'+(currentdate.get(Calendar.MONTH)+1)+"-"+currentdate.get(Calendar.YEAR);
+            else
+                newurl=url+(currentdate.get(Calendar.MONTH)+1)+"-"+currentdate.get(Calendar.YEAR);
+
+
+            HttpResponse response = httpclient.execute(new HttpGet(newurl));
             StatusLine statusLine = response.getStatusLine();
             if(statusLine.getStatusCode() == HttpStatus.SC_OK){
                 ByteArrayOutputStream out = new ByteArrayOutputStream();
