@@ -31,7 +31,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text="ilość: "
+            android:text="ilość maksymalna: "
             android:id="@+id/textView5" />
 
         <TextView

@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -32,6 +33,9 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.BasicResponseHandler;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.params.BasicHttpParams;
+import org.apache.http.params.HttpConnectionParams;
+import org.apache.http.params.HttpParams;
 import org.json.JSONArray;
 import org.json.JSONException;
 
@@ -42,6 +46,74 @@ import java.text.DecimalFormat;
 import java.util.ArrayList;
 
 
+class AsyncGetResult extends AsyncTask<String,String,String>{
+    private String posturl="http://192.168.1.34:8888/buyDrug";
+
+    private ShoppingCart orgclass;
+    private StringEntity se;
+    public AsyncGetResult(ShoppingCart orgclass,StringEntity se){
+        this.se=se;
+        this.orgclass=orgclass;
+    }
+
+
+
+    private String response2String(HttpResponse responseHandler){
+
+        String responseString=null;
+        try {
+            ByteArrayOutputStream out = new ByteArrayOutputStream();
+            responseHandler.getEntity().writeTo(out);
+            responseString = out.toString();
+            out.close();
+        } catch (IOException e) {
+            return "2";
+        }
+        return responseString;
+    }
+
+
+    @Override
+    protected String doInBackground(String... params) {
+        HttpParams httpParameters = new BasicHttpParams();
+        int timeoutConnection = 1000;
+        HttpConnectionParams.setConnectionTimeout(httpParameters, timeoutConnection);
+        int timeoutSocket = 2500;
+        HttpConnectionParams.setSoTimeout(httpParameters, timeoutSocket);
+        DefaultHttpClient httpclient = new DefaultHttpClient(httpParameters);
+        HttpPost httpost = new HttpPost(posturl);
+        httpost.setEntity(se);
+        httpost.setHeader("Accept", "application/json");
+        httpost.setHeader("Content-type", "application/json");
+        HttpResponse responseHandler =null;
+        try {
+            responseHandler=httpclient.execute(httpost);
+        } catch (IOException e) {
+            return "2";
+        }
+
+        return response2String(responseHandler);
+    }
+    @Override
+    protected void onPostExecute(String result) {
+        switch (result.length()){
+            case 1:
+                orgclass.showerro();
+                break;
+            case 2:
+                orgclass.showPositivResult();
+                break;
+            default:
+                try {
+                    orgclass.showNegativResult(result);
+                } catch (JSONException e) {
+                    orgclass.showerro();
+                }
+                break;
+        }
+    }
+}
+
 public class ShoppingCart extends Activity {
 
    private Button endButton;
@@ -50,10 +122,20 @@ public class ShoppingCart extends Activity {
    private ListView list;
    private ImageButton removeallb;
    private TextView finalprice;
-   private String posturl="http://192.168.1.34:8888/buyDrug";
+   private Button btnAddMore;
 
    public static ArrayList<drugInCart> listofd = new ArrayList<drugInCart>();
    public static boolean discount = false;
+
+    public void showerro(){
+        endButton.setEnabled(true);
+        btnAddMore.setEnabled(true);
+        CharSequence text = "Problem z połączeniem";
+        int duration = Toast.LENGTH_SHORT;
+
+        Toast toast = Toast.makeText(getApplicationContext(), text, duration);
+        toast.show();
+    }
 
     private void refresharraylist(){
 
@@ -99,41 +181,11 @@ public class ShoppingCart extends Activity {
         return se;
     }
 
-    private String response2String(HttpResponse responseHandler){
-
-        String responseString=null;
-        try {
-            ByteArrayOutputStream out = new ByteArrayOutputStream();
-            responseHandler.getEntity().writeTo(out);
-            responseString = out.toString();
-            out.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return responseString;
-    }
-
-    private String getResultString(){
-        StringEntity se = JsonSE();
-
-        DefaultHttpClient httpclient = new DefaultHttpClient();
-        HttpPost httpost = new HttpPost(posturl);
-        httpost.setEntity(se);
-        httpost.setHeader("Accept", "application/json");
-        httpost.setHeader("Content-type", "application/json");
-        HttpResponse responseHandler =null;
-        try {
-            responseHandler=httpclient.execute(httpost);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        return response2String(responseHandler);
 
 
-    }
-
-    private void showPositivResult(){
+    public void showPositivResult(){
+        endButton.setEnabled(true);
+        btnAddMore.setEnabled(true);
         Intent intent = new Intent(getApplicationContext(), ShoppingResult.class);
         ShoppingResult.finalprice = finalprice.getText().toString();
         ShoppingResult.recept = rswitch.isChecked();
@@ -141,7 +193,9 @@ public class ShoppingCart extends Activity {
 
         startActivity(intent);
     }
-    private void showNegativResult(String res) throws JSONException {
+    public void showNegativResult(String res) throws JSONException {
+        endButton.setEnabled(true);
+        btnAddMore.setEnabled(true);
 
         ArrayList<drugInCart> neglistres = new ArrayList<drugInCart>();
 
@@ -160,22 +214,9 @@ public class ShoppingCart extends Activity {
 
 
         if(listofd.size()>0){
-
-            String responseString="";
-            responseString=getResultString();
-
-            try {
-                if(!(responseString.length()>2)){
-                    //positv
-                    showPositivResult();
-                }else{
-                    //negativ
-                    showNegativResult(responseString);
-
-                }
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
+            endButton.setEnabled(false);
+            btnAddMore.setEnabled(false);
+            new AsyncGetResult(this,JsonSE()).execute("");
         }
     }
 
@@ -215,7 +256,7 @@ public class ShoppingCart extends Activity {
 
         refresharraylist();
 
-        final Button btnAddMore = new Button(this);
+        btnAddMore = new Button(this);
         btnAddMore.setText("Dodaj");
 
         list.addFooterView(btnAddMore);
@@ -330,6 +371,7 @@ public class ShoppingCart extends Activity {
         removeallb.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if(btnAddMore.isEnabled()){
                 DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
@@ -354,7 +396,7 @@ public class ShoppingCart extends Activity {
                         .setNegativeButton("Nie", dialogClickListener).show();
 
             }
-        });
+        }});
 
         endButton.setOnClickListener(new View.OnClickListener() {
             @Override
